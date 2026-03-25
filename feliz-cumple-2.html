@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎁 Mi France — Segundo Reto 🎁</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+    overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .confetti {
+    position: fixed;
+    width: 10px; height: 10px;
+    top: -10px; opacity: 0;
+    animation: confettiFall linear forwards;
+  }
+
+  @keyframes confettiFall {
+    0% { opacity: 1; top: -10px; transform: rotate(0deg) translateX(0); }
+    100% { opacity: 0.6; top: 105vh; transform: rotate(720deg) translateX(80px); }
+  }
+
+  .title {
+    font-size: clamp(2rem, 6vw, 4rem);
+    color: #fff;
+    text-align: center;
+    text-shadow: 0 0 20px rgba(255, 200, 50, 0.8), 0 0 40px rgba(255, 150, 50, 0.5);
+    animation: titlePop 1s ease-out forwards, glow 2s ease-in-out infinite alternate;
+    opacity: 0; transform: scale(0.3);
+    margin-bottom: 15px;
+  }
+
+  @keyframes titlePop {
+    0% { opacity: 0; transform: scale(0.3) rotate(-10deg); }
+    60% { transform: scale(1.15) rotate(3deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  }
+
+  @keyframes glow {
+    from { text-shadow: 0 0 20px rgba(255, 200, 50, 0.8), 0 0 40px rgba(255, 150, 50, 0.5); }
+    to { text-shadow: 0 0 30px rgba(255, 200, 50, 1), 0 0 60px rgba(255, 100, 50, 0.8), 0 0 80px rgba(255, 50, 100, 0.4); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .star {
+    position: fixed; width: 3px; height: 3px;
+    background: #fff; border-radius: 50%;
+    animation: twinkle 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes twinkle {
+    from { opacity: 0.2; transform: scale(1); }
+    to { opacity: 1; transform: scale(1.5); }
+  }
+
+  .emoji {
+    position: fixed; font-size: 2rem;
+    animation: floatUp linear forwards; opacity: 0;
+  }
+
+  @keyframes floatUp {
+    0% { opacity: 0; transform: translateY(0) scale(0); }
+    10% { opacity: 1; transform: translateY(-20px) scale(1); }
+    90% { opacity: 1; }
+    100% { opacity: 0; transform: translateY(-400px) scale(0.5) rotate(30deg); }
+  }
+
+  /* Pantallas */
+  .screen {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 520px;
+    width: 90vw;
+    z-index: 10;
+    position: relative;
+    text-align: center;
+    color: #fff;
+  }
+
+  .screen.hidden { display: none; }
+
+  @keyframes neonBlink {
+    0%, 100% { 
+      color: #ffd700;
+      text-shadow: 0 0 10px #ffd700, 0 0 20px #ff6bd6, 0 0 40px #ff6bd6, 0 0 60px #ffd700;
+      opacity: 1;
+    }
+    25% {
+      color: #ff6bd6;
+      text-shadow: 0 0 5px #ff6bd6, 0 0 15px #ffd700, 0 0 30px #ffd700;
+      opacity: 1;
+    }
+    50% {
+      color: #ffd700;
+      text-shadow: none;
+      opacity: 0.3;
+    }
+    75% {
+      color: #00cec9;
+      text-shadow: 0 0 10px #00cec9, 0 0 25px #ffd700, 0 0 50px #ff6bd6;
+      opacity: 1;
+    }
+  }
+
+  .neon-title {
+    animation: neonBlink 1.5s ease-in-out infinite;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="fireworks" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;"></canvas>
+
+<div class="title">🎉 ¡Feliz Cumpleaños Mi France! 🎉</div>
+
+<!-- PANTALLA 1: Premio recibido + frase secreta -->
+<div class="screen" id="screenWelcome">
+  <div style="font-size:3rem;margin-bottom:10px;">🎁🏆🎀</div>
+  <div style="font-size:1.3rem;color:#ffd700;margin-bottom:8px;" class="neon-title">¡Has recibido tu primer premio!</div>
+  <div style="font-size:1rem;color:rgba(255,255,255,0.8);margin-bottom:20px;">
+    ¿Deseas continuar con el segundo reto?<br>
+    Para desbloquear las siguientes preguntas, ingresa la frase secreta en minúsculas:
+  </div>
+  <input type="text" id="secretInput" placeholder="Escribe la frase secreta aquí..."
+    style="width:100%;padding:12px 16px;border-radius:12px;border:2px solid rgba(255,255,255,0.3);
+    background:rgba(255,255,255,0.08);color:#fff;font-size:1rem;outline:none;margin-bottom:10px;">
+  <div id="secretError" style="color:#ff6b6b;font-size:0.9rem;min-height:24px;margin-bottom:10px;"></div>
+  <button id="secretBtn" onclick="checkSecret()"
+    style="padding:12px 32px;border:none;border-radius:25px;
+    background:linear-gradient(135deg,#ffd700,#f97316);color:#1a1a2e;
+    font-size:1rem;font-weight:600;cursor:pointer;transition:transform 0.2s;">
+    🔓 Desbloquear Reto
+  </button>
+</div>
+
+<!-- PANTALLA 2: Trivia personal -->
+<div class="screen hidden" id="screenTrivia">
+  <div style="font-size:1.3rem;color:#ffd700;margin-bottom:5px;" class="neon-title">
+    🎉🎊💣🧨🎆🎇🪅🎈🎁🥳🎂🍾<br>¡Trivia Personal — Segundo Reto!
+  </div>
+  <div id="triviaScore" style="color:rgba(255,255,255,0.7);font-size:0.9rem;margin-bottom:15px;"></div>
+  <div id="triviaQ" style="font-size:1.1rem;margin-bottom:18px;min-height:50px;line-height:1.4;"></div>
+  <div id="triviaOpts" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;"></div>
+  <div id="triviaFeedback" style="margin-top:12px;font-size:1.1rem;min-height:30px;"></div>
+  <button id="triviaNext" style="display:none;margin:12px auto 0;padding:10px 28px;border:none;
+    border-radius:25px;background:linear-gradient(135deg,#ffd700,#f97316);color:#1a1a2e;
+    font-size:1rem;font-weight:600;cursor:pointer;">Siguiente →</button>
+  <div id="triviaEnd" style="display:none;">
+    <div id="finalScore" style="font-size:2.5rem;margin:10px 0;"></div>
+    <div id="finalMsg" style="font-size:1.1rem;color:#ffd700;margin-bottom:15px;"></div>
+    <button id="triviaRestart" style="padding:10px 28px;border:none;border-radius:25px;
+      background:linear-gradient(135deg,#a855f7,#6366f1);color:#fff;font-size:1rem;
+      font-weight:600;cursor:pointer;">🔄 Jugar de nuevo</button>
+  </div>
+</div>
+
+<script>
+  // ===== FUEGOS ARTIFICIALES =====
+  const fwCanvas = document.getElementById('fireworks');
+  const fwCtx = fwCanvas.getContext('2d');
+  let fwParticles = [], fwRockets = [];
+
+  function resizeCanvas() {
+    fwCanvas.width = window.innerWidth;
+    fwCanvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  class Particle {
+    constructor(x, y, color, vel, size, life) {
+      this.x = x; this.y = y; this.color = color;
+      this.vx = vel.x; this.vy = vel.y;
+      this.size = size; this.life = life; this.maxLife = life;
+      this.gravity = 0.03; this.trail = [];
+    }
+    update() {
+      this.trail.push({ x: this.x, y: this.y, life: this.life / this.maxLife });
+      if (this.trail.length > 6) this.trail.shift();
+      this.x += this.vx; this.y += this.vy;
+      this.vy += this.gravity; this.vx *= 0.99; this.life--;
+    }
+    draw(ctx) {
+      for (let i = 0; i < this.trail.length; i++) {
+        const t = this.trail[i];
+        ctx.beginPath();
+        ctx.arc(t.x, t.y, this.size * (i / this.trail.length) * t.life, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.globalAlpha = (i / this.trail.length) * 0.3 * (this.life / this.maxLife);
+        ctx.fill();
+      }
+      const alpha = this.life / this.maxLife;
+      ctx.globalAlpha = alpha;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fillStyle = this.color; ctx.fill();
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size * 3, 0, Math.PI * 2);
+      const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size * 3);
+      grad.addColorStop(0, this.color); grad.addColorStop(1, 'transparent');
+      ctx.fillStyle = grad; ctx.globalAlpha = alpha * 0.3; ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  class Rocket {
+    constructor() {
+      this.x = Math.random() * fwCanvas.width;
+      this.y = fwCanvas.height;
+      this.targetY = fwCanvas.height * (0.1 + Math.random() * 0.35);
+      this.vy = -(4 + Math.random() * 3);
+      this.vx = (Math.random() - 0.5) * 2;
+      this.trail = []; this.exploded = false;
+    }
+    update() {
+      this.trail.push({ x: this.x, y: this.y });
+      if (this.trail.length > 12) this.trail.shift();
+      this.x += this.vx; this.y += this.vy; this.vy += 0.04;
+      if (this.y <= this.targetY || this.vy >= 0) { this.explode(); this.exploded = true; }
+    }
+    explode() {
+      const palettes = [
+        ['#ff6b6b','#ff8787','#ffa8a8'],['#ffd700','#ffe066','#fff3bf'],
+        ['#74b9ff','#a29bfe','#dfe6e9'],['#ff6bd6','#f368e0','#ff9ff3'],
+        ['#00cec9','#81ecec','#55efc4'],['#fd79a8','#e84393','#fab1a0'],
+        ['#6c5ce7','#a29bfe','#dfe6e9'],['#e17055','#fdcb6e','#ffeaa7']
+      ];
+      const palette = palettes[Math.floor(Math.random() * palettes.length)];
+      const count = 60 + Math.floor(Math.random() * 50);
+      const type = Math.random();
+      for (let i = 0; i < count; i++) {
+        let angle, speed;
+        const color = palette[Math.floor(Math.random() * palette.length)];
+        if (type < 0.3) { angle = (Math.PI * 2 / count) * i; speed = 2 + Math.random() * 3; }
+        else if (type < 0.6) { angle = (Math.PI * 2 / count) * i; speed = i % 2 === 0 ? 2 + Math.random() : 4 + Math.random(); }
+        else { angle = Math.random() * Math.PI * 2; speed = 1 + Math.random() * 4; }
+        fwParticles.push(new Particle(this.x, this.y, color,
+          { x: Math.cos(angle) * speed, y: Math.sin(angle) * speed },
+          1.5 + Math.random() * 1.5, 60 + Math.floor(Math.random() * 40)));
+      }
+      for (let i = 0; i < 15; i++) {
+        const a = Math.random() * Math.PI * 2, s = Math.random() * 1.5;
+        fwParticles.push(new Particle(this.x, this.y, '#fff',
+          { x: Math.cos(a) * s, y: Math.sin(a) * s }, 1, 30 + Math.floor(Math.random() * 20)));
+      }
+    }
+    draw(ctx) {
+      for (let i = 0; i < this.trail.length; i++) {
+        ctx.beginPath();
+        ctx.arc(this.trail[i].x, this.trail[i].y, 2 * (i / this.trail.length), 0, Math.PI * 2);
+        ctx.fillStyle = '#ffd700'; ctx.globalAlpha = i / this.trail.length * 0.6; ctx.fill();
+      }
+      ctx.globalAlpha = 1; ctx.beginPath();
+      ctx.arc(this.x, this.y, 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = '#fff'; ctx.fill();
+    }
+  }
+
+  function fwLoop() {
+    fwCtx.globalCompositeOperation = 'destination-out';
+    fwCtx.fillStyle = 'rgba(0,0,0,0.15)';
+    fwCtx.fillRect(0, 0, fwCanvas.width, fwCanvas.height);
+    fwCtx.globalCompositeOperation = 'lighter';
+    fwRockets = fwRockets.filter(r => !r.exploded);
+    fwRockets.forEach(r => { r.update(); r.draw(fwCtx); });
+    fwParticles = fwParticles.filter(p => p.life > 0);
+    fwParticles.forEach(p => { p.update(); p.draw(fwCtx); });
+    requestAnimationFrame(fwLoop);
+  }
+  setInterval(() => {
+    const burst = 1 + Math.floor(Math.random() * 3);
+    for (let i = 0; i < burst; i++) setTimeout(() => fwRockets.push(new Rocket()), i * 200);
+  }, 800);
+  fwLoop();
+
+  // Estrellas
+  for (let i = 0; i < 50; i++) {
+    const s = document.createElement('div'); s.className = 'star';
+    s.style.left = Math.random()*100+'vw'; s.style.top = Math.random()*100+'vh';
+    s.style.animationDelay = Math.random()*3+'s';
+    s.style.animationDuration = (1.5+Math.random()*2)+'s';
+    document.body.appendChild(s);
+  }
+
+  // Confeti
+  function launchConfetti() {
+    const colors = ['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#ff6bd6','#a855f7','#f97316'];
+    for (let i = 0; i < 80; i++) {
+      const c = document.createElement('div'); c.className = 'confetti';
+      c.style.left = Math.random()*100+'vw';
+      c.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+      c.style.animationDuration = (3+Math.random()*4)+'s';
+      c.style.animationDelay = Math.random()*3+'s';
+      c.style.width = (6+Math.random()*10)+'px';
+      c.style.height = (4+Math.random()*8)+'px';
+      c.style.borderRadius = Math.random()>0.5?'50%':'2px';
+      document.body.appendChild(c);
+    }
+  }
+  launchConfetti();
+  setTimeout(function loop(){ launchConfetti(); setTimeout(loop, 8000); }, 8000);
+
+  // Emojis
+  const emojis = ['🎈','🎁','🥳','💖','⭐','💅','🏋️','👗','🎀','✨'];
+  setInterval(() => {
+    const em = document.createElement('div'); em.className = 'emoji';
+    em.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+    em.style.left = (10+Math.random()*80)+'vw'; em.style.bottom = '0';
+    em.style.animationDuration = (3+Math.random()*3)+'s';
+    document.body.appendChild(em);
+    em.addEventListener('animationend', () => em.remove());
+  }, 800);
+
+  // ===== FRASE SECRETA =====
+  const SECRET = 'el amor es el mejor regalo que podemos ofrecer a alguna persona';
+
+  // Música de cumpleaños con Web Audio API
+  let audioCtx = null;
+
+  function playBirthdaySong() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const notes = [
+      [262,0.3],[262,0.3],[294,0.6],[262,0.6],[349,0.6],[330,1.0],
+      [262,0.3],[262,0.3],[294,0.6],[262,0.6],[392,0.6],[349,1.0],
+      [262,0.3],[262,0.3],[523,0.6],[440,0.6],[349,0.6],[330,0.6],[294,1.0],
+      [466,0.3],[466,0.3],[440,0.6],[349,0.6],[392,0.6],[349,1.0]
+    ];
+    let time = audioCtx.currentTime + 0.1;
+    notes.forEach(([freq, dur]) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.15, time);
+      gain.gain.exponentialRampToValueAtTime(0.001, time + dur - 0.05);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(time);
+      osc.stop(time + dur);
+      time += dur;
+    });
+  }
+
+  // Autoplay al primer click/toque en la página
+  function autoPlayOnce() {
+    playBirthdaySong();
+    document.removeEventListener('click', autoPlayOnce);
+    document.removeEventListener('touchstart', autoPlayOnce);
+  }
+  document.addEventListener('click', autoPlayOnce);
+  document.addEventListener('touchstart', autoPlayOnce);
+
+  function checkSecret() {
+    const input = document.getElementById('secretInput').value.trim().toLowerCase();
+    if (input === SECRET) {
+      document.getElementById('screenWelcome').classList.add('hidden');
+      document.getElementById('screenTrivia').classList.remove('hidden');
+      launchConfetti();
+      loadQuestion();
+    } else {
+      document.getElementById('secretError').textContent = '❌ Frase incorrecta. Intenta de nuevo.';
+      document.getElementById('secretInput').style.borderColor = '#ff6b6b';
+      setTimeout(() => {
+        document.getElementById('secretError').textContent = '';
+        document.getElementById('secretInput').style.borderColor = 'rgba(255,255,255,0.3)';
+      }, 2500);
+    }
+  }
+
+  document.getElementById('secretInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') checkSecret();
+  });
+
+  // ===== TRIVIA PERSONAL =====
+  const triviaData = [
+    { q: '💕 ¿Cuál es la mejor forma de empezar el día?', opts: ['Café y ejercicio','Dormir 5 min más','Un abrazo','Revisar el celular'], ans: 2 },
+    { q: '🌍 ¿A qué lugar del mundo te gustaría viajar conmigo?', opts: ['París','China','Japón','Todos los anteriores'], ans: 3 },
+    { q: '🎵 ¿Qué canción te recuerda a nosotros?', opts: ['Hawái - Maluma','Cola - Camilo','Dilema - Nelly & Kelly','Provenza - Karol G'], ans: 2 },
+    { q: '🌹 ¿Qué es lo que más valoras en una relación?', opts: ['Los regalos','La confianza y el respeto','Las salidas','Las fotos juntos'], ans: 1 },
+    { q: '😍 ¿Qué te enamora más de alguien?', opts: ['Su físico','Su sentido del humor','Su creatividad *','Su forma de amar'], ans: 2 },
+    { q: '🏖️ ¿Plan perfecto de fin de semana?', opts: ['Netflix y sofá','Playa y sol','Ir de compras','Aventura y montaña'], ans: 2 },
+    { q: '💌 ¿Qué frase describe mejor el amor?', opts: ['Es complicado','Es el mejor regalo que podemos ofrecer','Es solo química','Es cosa de películas'], ans: 1 },
+    { q: '🎂 ¿Qué es lo más importante en un cumpleaños?', opts: ['Los regalos','La fiesta','Estar con quien amas','El pastel'], ans: 2 }
+  ];
+
+  let tCurrent = 0, tScore = 0, tAnswered = false;
+  const tQ = document.getElementById('triviaQ');
+  const tOpts = document.getElementById('triviaOpts');
+  const tFeedback = document.getElementById('triviaFeedback');
+  const tNext = document.getElementById('triviaNext');
+  const tScoreEl = document.getElementById('triviaScore');
+  const tEnd = document.getElementById('triviaEnd');
+
+  function loadQuestion() {
+    tAnswered = false;
+    tFeedback.textContent = '';
+    tNext.style.display = 'none';
+    const d = triviaData[tCurrent];
+    tQ.textContent = d.q;
+    tScoreEl.textContent = 'Pregunta ' + (tCurrent+1) + ' / ' + triviaData.length + ' — Puntos: ' + tScore;
+    tOpts.innerHTML = '';
+    d.opts.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.textContent = opt;
+      btn.style.cssText = 'padding:12px 10px;border:2px solid rgba(255,255,255,0.3);border-radius:12px;background:rgba(255,255,255,0.08);color:#fff;font-size:0.95rem;cursor:pointer;transition:all 0.3s;';
+      btn.addEventListener('mouseenter', () => { if(!btn.disabled){ btn.style.background='rgba(255,255,255,0.2)'; btn.style.borderColor='#ffd700'; }});
+      btn.addEventListener('mouseleave', () => { if(!btn.disabled && !btn.dataset.answered){ btn.style.background='rgba(255,255,255,0.08)'; btn.style.borderColor='rgba(255,255,255,0.3)'; }});
+      btn.addEventListener('click', () => checkAnswer(i, btn));
+      tOpts.appendChild(btn);
+    });
+  }
+
+  function checkAnswer(idx, btn) {
+    if (tAnswered) return;
+    tAnswered = true;
+    const correct = triviaData[tCurrent].ans;
+    const btns = tOpts.querySelectorAll('button');
+    btns.forEach(b => { b.disabled = true; b.dataset.answered = '1'; });
+
+    if (idx === correct) {
+      btn.style.background = 'rgba(107,203,119,0.4)';
+      btn.style.borderColor = '#6bcb77';
+      tScore++;
+      tFeedback.textContent = '🎉 ¡Correcto!';
+    } else {
+      btn.style.background = 'rgba(255,107,107,0.4)';
+      btn.style.borderColor = '#ff6b6b';
+      btns[correct].style.background = 'rgba(107,203,119,0.4)';
+      btns[correct].style.borderColor = '#6bcb77';
+      tFeedback.textContent = '😅 La respuesta era: ' + triviaData[tCurrent].opts[correct];
+    }
+    tScoreEl.textContent = 'Pregunta ' + (tCurrent+1) + ' / ' + triviaData.length + ' — Puntos: ' + tScore;
+
+    if (tCurrent < triviaData.length - 1) {
+      tNext.style.display = 'block';
+    } else {
+      setTimeout(showEnd, 1200);
+    }
+  }
+
+  function showEnd() {
+    tQ.style.display = 'none';
+    tOpts.style.display = 'none';
+    tFeedback.style.display = 'none';
+    tNext.style.display = 'none';
+    tEnd.style.display = 'block';
+    document.getElementById('finalScore').textContent = tScore + ' / ' + triviaData.length;
+
+    if (tScore === triviaData.length) {
+      document.getElementById('finalMsg').innerHTML =
+        '🏆💖 <strong>¡INCREÍBLE MI FRANCE!</strong> 💖🏆<br><br>' +
+        '¡Completaste el SEGUNDO RETO perfectamente! 🎉<br><br>' +
+        '🎁 <strong>¡GANASTE EL SEGUNDO PREMIO!</strong> 🎁<br><br>' +
+        '📲 Envía esta frase a mi WhatsApp:<br><br>' +
+        '<strong style="font-size:1.3rem;color:#ff6bd6;">"creo en ti confia en mi"</strong><br><br>' +
+        '⏰ Recibirás el 3er RETO INOLVIDABLE en las próximas 24 horas 🎀✨';
+    } else {
+      const pct = tScore / triviaData.length;
+      document.getElementById('finalMsg').textContent =
+        pct >= 0.7 ? '🥳 ¡Casi perfecta, France! Intenta de nuevo para el segundo premio' :
+        pct >= 0.4 ? '💖 ¡Nada mal! Pero necesitas todas correctas para el premio' :
+        '🎂 ¡Ánimo France! Inténtalo de nuevo, tú puedes 💪';
+    }
+    launchConfetti();
+  }
+
+  tNext.addEventListener('click', () => { tCurrent++; loadQuestion(); });
+
+  document.getElementById('triviaRestart').addEventListener('click', () => {
+    tCurrent = 0; tScore = 0;
+    tQ.style.display = ''; tOpts.style.display = '';
+    tFeedback.style.display = ''; tEnd.style.display = 'none';
+    loadQuestion();
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎂 ¡Feliz Cumpleaños Mi France! 🎂</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+    overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  /* Confeti */
+  .confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    top: -10px;
+    opacity: 0;
+    animation: confettiFall linear forwards;
+  }
+
+  @keyframes confettiFall {
+    0% { opacity: 1; top: -10px; transform: rotate(0deg) translateX(0); }
+    100% { opacity: 0.6; top: 105vh; transform: rotate(720deg) translateX(80px); }
+  }
+
+  /* Texto principal */
+  .title {
+    font-size: clamp(2rem, 6vw, 4.5rem);
+    color: #fff;
+    text-align: center;
+    text-shadow: 0 0 20px rgba(255, 200, 50, 0.8), 0 0 40px rgba(255, 150, 50, 0.5);
+    animation: titlePop 1s ease-out forwards, glow 2s ease-in-out infinite alternate;
+    opacity: 0;
+    transform: scale(0.3);
+    margin-bottom: 20px;
+  }
+
+  @keyframes titlePop {
+    0% { opacity: 0; transform: scale(0.3) rotate(-10deg); }
+    60% { transform: scale(1.15) rotate(3deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  }
+
+  @keyframes glow {
+    from { text-shadow: 0 0 20px rgba(255, 200, 50, 0.8), 0 0 40px rgba(255, 150, 50, 0.5); }
+    to { text-shadow: 0 0 30px rgba(255, 200, 50, 1), 0 0 60px rgba(255, 100, 50, 0.8), 0 0 80px rgba(255, 50, 100, 0.4); }
+  }
+
+  .subtitle {
+    font-size: clamp(1rem, 3vw, 1.8rem);
+    color: #ffd700;
+    text-align: center;
+    opacity: 0;
+    animation: fadeUp 1s ease-out 0.8s forwards;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Pastel moderno */
+  .cake-container {
+    margin: 30px 0;
+    opacity: 0;
+    animation: fadeUp 1s ease-out 0.4s forwards;
+    filter: drop-shadow(0 0 30px rgba(255, 107, 214, 0.4));
+  }
+
+  .cake {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cake-layer {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cake-layer::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 45%, rgba(255,255,255,0.15) 55%, transparent 100%);
+    pointer-events: none;
+  }
+
+  .layer-top {
+    width: 120px; height: 45px;
+    background: linear-gradient(135deg, #ff6bd6, #e84393, #fd79a8);
+    border-radius: 12px 12px 4px 4px;
+    z-index: 2;
+    box-shadow: 0 4px 15px rgba(232, 67, 147, 0.5);
+  }
+
+  .drip {
+    position: absolute;
+    bottom: -8px;
+    width: 12px;
+    height: 14px;
+    background: #ff6bd6;
+    border-radius: 0 0 50% 50%;
+    z-index: 5;
+  }
+
+  .layer-mid {
+    width: 160px; height: 50px;
+    background: linear-gradient(135deg, #a29bfe, #6c5ce7, #7c6cf0);
+    margin-top: -3px;
+    border-radius: 6px;
+    z-index: 1;
+    box-shadow: 0 4px 15px rgba(108, 92, 231, 0.5);
+  }
+
+  .layer-bottom {
+    width: 200px; height: 55px;
+    background: linear-gradient(135deg, #00cec9, #0984e3, #74b9ff);
+    margin-top: -3px;
+    border-radius: 4px 4px 16px 16px;
+    z-index: 0;
+    box-shadow: 0 6px 20px rgba(9, 132, 227, 0.5);
+  }
+
+  .cake-base {
+    width: 220px; height: 10px;
+    background: linear-gradient(135deg, #dfe6e9, #b2bec3);
+    border-radius: 0 0 20px 20px;
+    margin-top: -2px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  }
+
+  .cake-topper {
+    font-size: 1.6rem;
+    margin-bottom: 2px;
+    animation: bounce 1s ease-in-out infinite;
+    z-index: 10;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  /* Velitas modernas */
+  .candles {
+    display: flex;
+    gap: 18px;
+    position: relative;
+    z-index: 3;
+    margin-bottom: -6px;
+  }
+
+  .candle {
+    width: 6px;
+    height: 30px;
+    border-radius: 3px 3px 0 0;
+    position: relative;
+  }
+
+  .candle:nth-child(1) { background: linear-gradient(to bottom, #ffeaa7, #fdcb6e); }
+  .candle:nth-child(2) { background: linear-gradient(to bottom, #fab1a0, #e17055); }
+  .candle:nth-child(3) { background: linear-gradient(to bottom, #81ecec, #00cec9); }
+  .candle:nth-child(4) { background: linear-gradient(to bottom, #a29bfe, #6c5ce7); }
+  .candle:nth-child(5) { background: linear-gradient(to bottom, #ff9ff3, #f368e0); }
+
+  .flame {
+    position: absolute;
+    top: -16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 10px;
+    height: 16px;
+    background: radial-gradient(ellipse at bottom, #fff 0%, #ffd700 30%, #ff6b35 60%, #ff4500 100%);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    animation: flicker 0.3s ease-in-out infinite alternate;
+    box-shadow: 0 0 8px #ffd700, 0 0 15px rgba(255, 107, 53, 0.6);
+  }
+
+  .flame::after {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 5px;
+    height: 8px;
+    background: radial-gradient(ellipse at bottom, #fff, #ffd700);
+    border-radius: 50%;
+    opacity: 0.9;
+  }
+
+  @keyframes flicker {
+    0% { transform: translateX(-50%) scale(1) rotate(-2deg); }
+    100% { transform: translateX(-50%) scale(1.1, 0.9) rotate(2deg); }
+  }
+
+  /* Estrellas de fondo */
+  .star {
+    position: fixed;
+    width: 3px;
+    height: 3px;
+    background: #fff;
+    border-radius: 50%;
+    animation: twinkle 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes twinkle {
+    from { opacity: 0.2; transform: scale(1); }
+    to { opacity: 1; transform: scale(1.5); }
+  }
+
+  /* Emojis flotantes */
+  .emoji {
+    position: fixed;
+    font-size: 2rem;
+    animation: floatUp linear forwards;
+    opacity: 0;
+  }
+
+  @keyframes floatUp {
+    0% { opacity: 0; transform: translateY(0) scale(0); }
+    10% { opacity: 1; transform: translateY(-20px) scale(1); }
+    90% { opacity: 1; }
+    100% { opacity: 0; transform: translateY(-400px) scale(0.5) rotate(30deg); }
+  }
+
+  /* Botón de música */
+  .music-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(255,255,255,0.15);
+    border: 2px solid rgba(255,255,255,0.3);
+    color: #fff;
+    font-size: 1.5rem;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s;
+    z-index: 100;
+  }
+
+  .music-btn:hover { background: rgba(255,255,255,0.3); transform: scale(1.1); }
+
+  /* Trivia */
+  .trivia-container {
+    margin-top: 30px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 25px 30px;
+    max-width: 500px;
+    width: 90vw;
+    opacity: 0;
+    animation: fadeUp 1s ease-out 1.2s forwards;
+    z-index: 10;
+    position: relative;
+  }
+
+  .trivia-header {
+    color: #ffd700;
+    font-size: 1.3rem;
+    text-align: center;
+    margin-bottom: 5px;
+    animation: neonBlink 1.5s ease-in-out infinite;
+  }
+
+  @keyframes neonBlink {
+    0%, 100% { 
+      color: #ffd700;
+      text-shadow: 0 0 10px #ffd700, 0 0 20px #ff6bd6, 0 0 40px #ff6bd6, 0 0 60px #ffd700;
+      opacity: 1;
+    }
+    25% {
+      color: #ff6bd6;
+      text-shadow: 0 0 5px #ff6bd6, 0 0 15px #ffd700, 0 0 30px #ffd700;
+      opacity: 1;
+    }
+    50% {
+      color: #ffd700;
+      text-shadow: none;
+      opacity: 0.3;
+    }
+    75% {
+      color: #00cec9;
+      text-shadow: 0 0 10px #00cec9, 0 0 25px #ffd700, 0 0 50px #ff6bd6;
+      opacity: 1;
+    }
+  }
+
+  .trivia-score {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.9rem;
+    text-align: center;
+    margin-bottom: 15px;
+  }
+
+  .trivia-question {
+    color: #fff;
+    font-size: 1.1rem;
+    text-align: center;
+    margin-bottom: 18px;
+    min-height: 50px;
+    line-height: 1.4;
+  }
+
+  .trivia-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .trivia-btn {
+    padding: 12px 10px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 12px;
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .trivia-btn:hover:not(:disabled) {
+    background: rgba(255,255,255,0.2);
+    border-color: #ffd700;
+    transform: scale(1.03);
+  }
+
+  .trivia-btn:disabled { cursor: default; opacity: 0.85; }
+
+  .trivia-btn.correct {
+    background: rgba(107, 203, 119, 0.4);
+    border-color: #6bcb77;
+    animation: popCorrect 0.4s ease;
+  }
+
+  .trivia-btn.wrong {
+    background: rgba(255, 107, 107, 0.4);
+    border-color: #ff6b6b;
+    animation: shake 0.4s ease;
+  }
+
+  @keyframes popCorrect {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+    100% { transform: scale(1); }
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+
+  .trivia-feedback {
+    text-align: center;
+    margin-top: 12px;
+    font-size: 1.1rem;
+    min-height: 30px;
+    color: #fff;
+  }
+
+  .trivia-next {
+    display: none;
+    margin: 12px auto 0;
+    padding: 10px 28px;
+    border: none;
+    border-radius: 25px;
+    background: linear-gradient(135deg, #ffd700, #f97316);
+    color: #1a1a2e;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+
+  .trivia-next:hover { transform: scale(1.06); }
+
+  .trivia-end {
+    text-align: center;
+    color: #fff;
+    display: none;
+  }
+
+  .trivia-end .final-score {
+    font-size: 2.5rem;
+    margin: 10px 0;
+  }
+
+  .trivia-end .final-msg {
+    font-size: 1.1rem;
+    color: #ffd700;
+    margin-bottom: 15px;
+  }
+
+  .trivia-restart {
+    padding: 10px 28px;
+    border: none;
+    border-radius: 25px;
+    background: linear-gradient(135deg, #a855f7, #6366f1);
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+
+  .trivia-restart:hover { transform: scale(1.06); }
+</style>
+</head>
+<body>
+
+<canvas id="fireworks" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;"></canvas>
+
+<div class="cake-container">
+  <div class="cake">
+    <div class="cake-topper">👑</div>
+    <div class="candles">
+      <div class="candle"><div class="flame"></div></div>
+      <div class="candle"><div class="flame"></div></div>
+      <div class="candle"><div class="flame"></div></div>
+      <div class="candle"><div class="flame"></div></div>
+      <div class="candle"><div class="flame"></div></div>
+    </div>
+    <div class="cake-layer layer-top" style="position:relative;">
+      <div class="drip" style="left:15px;"></div>
+      <div class="drip" style="left:45px;height:18px;"></div>
+      <div class="drip" style="left:75px;height:10px;"></div>
+      <div class="drip" style="left:100px;height:16px;"></div>
+    </div>
+    <div class="cake-layer layer-mid"></div>
+    <div class="cake-layer layer-bottom"></div>
+    <div class="cake-base"></div>
+  </div>
+</div>
+
+<div class="title">🎉 ¡Feliz Cumpleaños Mi France! 🎉</div>
+<div class="subtitle">✨ Que todos tus deseos se hagan realidad, hermosa ✨</div>
+
+<div class="trivia-container" id="triviaBox">
+  <div class="trivia-header">🎉🎊💣🧨🎆🎇🪅🎈🎁🥳🎂🍾<br>¡Trivia para iniciar Reto y reclamar algo importante y que realmente necesitas!</div>
+  <div class="trivia-score" id="triviaScore">Pregunta 1 / 12 — Puntos: 0</div>
+  <div class="trivia-question" id="triviaQ"></div>
+  <div class="trivia-options" id="triviaOpts"></div>
+  <div class="trivia-feedback" id="triviaFeedback"></div>
+  <button class="trivia-next" id="triviaNext">Siguiente →</button>
+  <div class="trivia-end" id="triviaEnd">
+    <div class="final-score" id="finalScore"></div>
+    <div class="final-msg" id="finalMsg"></div>
+    <button class="trivia-restart" id="triviaRestart">🔄 Jugar de nuevo</button>
+  </div>
+</div>
+
+<button class="music-btn" id="musicBtn" aria-label="Activar música">🎵</button>
+
+<script>
+  // ===== FUEGOS ARTIFICIALES =====
+  const fwCanvas = document.getElementById('fireworks');
+  const fwCtx = fwCanvas.getContext('2d');
+  let fwParticles = [];
+  let fwRockets = [];
+
+  function resizeCanvas() {
+    fwCanvas.width = window.innerWidth;
+    fwCanvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  class Particle {
+    constructor(x, y, color, vel, size, life) {
+      this.x = x; this.y = y;
+      this.color = color;
+      this.vx = vel.x; this.vy = vel.y;
+      this.size = size;
+      this.life = life;
+      this.maxLife = life;
+      this.gravity = 0.03;
+      this.trail = [];
+    }
+    update() {
+      this.trail.push({ x: this.x, y: this.y, life: this.life / this.maxLife });
+      if (this.trail.length > 6) this.trail.shift();
+      this.x += this.vx;
+      this.y += this.vy;
+      this.vy += this.gravity;
+      this.vx *= 0.99;
+      this.life--;
+    }
+    draw(ctx) {
+      // trail
+      for (let i = 0; i < this.trail.length; i++) {
+        const t = this.trail[i];
+        ctx.beginPath();
+        ctx.arc(t.x, t.y, this.size * (i / this.trail.length) * t.life, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.globalAlpha = (i / this.trail.length) * 0.3 * (this.life / this.maxLife);
+        ctx.fill();
+      }
+      // main
+      const alpha = this.life / this.maxLife;
+      ctx.globalAlpha = alpha;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fillStyle = this.color;
+      ctx.fill();
+      // glow
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size * 3, 0, Math.PI * 2);
+      const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size * 3);
+      grad.addColorStop(0, this.color);
+      grad.addColorStop(1, 'transparent');
+      ctx.fillStyle = grad;
+      ctx.globalAlpha = alpha * 0.3;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  class Rocket {
+    constructor() {
+      this.x = Math.random() * fwCanvas.width;
+      this.y = fwCanvas.height;
+      this.targetY = fwCanvas.height * (0.1 + Math.random() * 0.35);
+      this.vy = -(4 + Math.random() * 3);
+      this.vx = (Math.random() - 0.5) * 2;
+      this.trail = [];
+      this.exploded = false;
+    }
+    update() {
+      this.trail.push({ x: this.x, y: this.y });
+      if (this.trail.length > 12) this.trail.shift();
+      this.x += this.vx;
+      this.y += this.vy;
+      this.vy += 0.04;
+      if (this.y <= this.targetY || this.vy >= 0) {
+        this.explode();
+        this.exploded = true;
+      }
+    }
+    explode() {
+      const colors = [
+        ['#ff6b6b','#ff8787','#ffa8a8'],
+        ['#ffd700','#ffe066','#fff3bf'],
+        ['#74b9ff','#a29bfe','#dfe6e9'],
+        ['#ff6bd6','#f368e0','#ff9ff3'],
+        ['#00cec9','#81ecec','#55efc4'],
+        ['#fd79a8','#e84393','#fab1a0'],
+        ['#6c5ce7','#a29bfe','#dfe6e9'],
+        ['#e17055','#fdcb6e','#ffeaa7']
+      ];
+      const palette = colors[Math.floor(Math.random() * colors.length)];
+      const count = 60 + Math.floor(Math.random() * 50);
+      const type = Math.random();
+
+      for (let i = 0; i < count; i++) {
+        let angle, speed, color;
+        color = palette[Math.floor(Math.random() * palette.length)];
+
+        if (type < 0.3) {
+          // Circular
+          angle = (Math.PI * 2 / count) * i;
+          speed = 2 + Math.random() * 3;
+        } else if (type < 0.6) {
+          // Double ring
+          angle = (Math.PI * 2 / count) * i;
+          speed = i % 2 === 0 ? 2 + Math.random() : 4 + Math.random();
+        } else {
+          // Random burst
+          angle = Math.random() * Math.PI * 2;
+          speed = 1 + Math.random() * 4;
+        }
+
+        fwParticles.push(new Particle(
+          this.x, this.y, color,
+          { x: Math.cos(angle) * speed, y: Math.sin(angle) * speed },
+          1.5 + Math.random() * 1.5,
+          60 + Math.floor(Math.random() * 40)
+        ));
+      }
+
+      // Sparkle center
+      for (let i = 0; i < 15; i++) {
+        const a = Math.random() * Math.PI * 2;
+        const s = Math.random() * 1.5;
+        fwParticles.push(new Particle(
+          this.x, this.y, '#fff',
+          { x: Math.cos(a) * s, y: Math.sin(a) * s },
+          1, 30 + Math.floor(Math.random() * 20)
+        ));
+      }
+    }
+    draw(ctx) {
+      for (let i = 0; i < this.trail.length; i++) {
+        ctx.beginPath();
+        ctx.arc(this.trail[i].x, this.trail[i].y, 2 * (i / this.trail.length), 0, Math.PI * 2);
+        ctx.fillStyle = '#ffd700';
+        ctx.globalAlpha = i / this.trail.length * 0.6;
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = '#fff';
+      ctx.fill();
+    }
+  }
+
+  function launchRocket() {
+    fwRockets.push(new Rocket());
+  }
+
+  function fwLoop() {
+    fwCtx.globalCompositeOperation = 'destination-out';
+    fwCtx.fillStyle = 'rgba(0,0,0,0.15)';
+    fwCtx.fillRect(0, 0, fwCanvas.width, fwCanvas.height);
+    fwCtx.globalCompositeOperation = 'lighter';
+
+    fwRockets = fwRockets.filter(r => !r.exploded);
+    fwRockets.forEach(r => { r.update(); r.draw(fwCtx); });
+
+    fwParticles = fwParticles.filter(p => p.life > 0);
+    fwParticles.forEach(p => { p.update(); p.draw(fwCtx); });
+
+    requestAnimationFrame(fwLoop);
+  }
+
+  // Lanzar cohetes continuamente
+  setInterval(() => {
+    const burst = 1 + Math.floor(Math.random() * 3);
+    for (let i = 0; i < burst; i++) setTimeout(launchRocket, i * 200);
+  }, 800);
+
+  fwLoop();
+  // Crear estrellas de fondo
+  function createStars() {
+    for (let i = 0; i < 50; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      star.style.left = Math.random() * 100 + 'vw';
+      star.style.top = Math.random() * 100 + 'vh';
+      star.style.animationDelay = Math.random() * 3 + 's';
+      star.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+      document.body.appendChild(star);
+    }
+  }
+
+  // Crear confeti
+  function launchConfetti() {
+    const colors = ['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#ff6bd6','#a855f7','#f97316'];
+    const shapes = ['square','circle'];
+    for (let i = 0; i < 80; i++) {
+      const conf = document.createElement('div');
+      conf.className = 'confetti';
+      conf.style.left = Math.random() * 100 + 'vw';
+      conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+      conf.style.animationDuration = (3 + Math.random() * 4) + 's';
+      conf.style.animationDelay = Math.random() * 3 + 's';
+      conf.style.width = (6 + Math.random() * 10) + 'px';
+      conf.style.height = shapes[Math.floor(Math.random() * 2)] === 'circle'
+        ? conf.style.width : (4 + Math.random() * 8) + 'px';
+      conf.style.borderRadius = shapes[Math.floor(Math.random() * 2)] === 'circle' ? '50%' : '2px';
+      document.body.appendChild(conf);
+    }
+  }
+
+  // Emojis flotantes periódicos
+  const emojis = ['🎈','🎁','🥳','💖','⭐','💅','�️','👗','🎀','✨'];
+  function spawnEmoji() {
+    const em = document.createElement('div');
+    em.className = 'emoji';
+    em.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    em.style.left = (10 + Math.random() * 80) + 'vw';
+    em.style.bottom = '0';
+    em.style.animationDuration = (3 + Math.random() * 3) + 's';
+    document.body.appendChild(em);
+    em.addEventListener('animationend', () => em.remove());
+  }
+
+  // Relanzar confeti cada cierto tiempo
+  function confettiLoop() {
+    launchConfetti();
+    setTimeout(confettiLoop, 8000);
+  }
+
+  // Música simple con Web Audio API (melodía de cumpleaños)
+  let audioCtx = null;
+  let playing = false;
+
+  function playBirthdaySong() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const notes = [
+      [262,0.3],[262,0.3],[294,0.6],[262,0.6],[349,0.6],[330,1.0],
+      [262,0.3],[262,0.3],[294,0.6],[262,0.6],[392,0.6],[349,1.0],
+      [262,0.3],[262,0.3],[523,0.6],[440,0.6],[349,0.6],[330,0.6],[294,1.0],
+      [466,0.3],[466,0.3],[440,0.6],[349,0.6],[392,0.6],[349,1.0]
+    ];
+    let time = audioCtx.currentTime + 0.1;
+    notes.forEach(([freq, dur]) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.15, time);
+      gain.gain.exponentialRampToValueAtTime(0.001, time + dur - 0.05);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(time);
+      osc.stop(time + dur);
+      time += dur;
+    });
+  }
+
+  document.getElementById('musicBtn').addEventListener('click', () => {
+    playBirthdaySong();
+  });
+
+  // Autoplay al primer click/toque en la página
+  function autoPlayOnce() {
+    playBirthdaySong();
+    document.removeEventListener('click', autoPlayOnce);
+    document.removeEventListener('touchstart', autoPlayOnce);
+  }
+  document.addEventListener('click', autoPlayOnce);
+  document.addEventListener('touchstart', autoPlayOnce);
+
+  // Iniciar todo
+  createStars();
+  confettiLoop();
+  setInterval(spawnEmoji, 800);
+
+  // ===== TRIVIA =====
+  const triviaData = [
+    { q: '¿Qué diseñador creó el icónico "little black dress"?', opts: ['Versace','Coco Chanel','Prada','Dior'], ans: 1 },
+    { q: '¿Cómo se llama el álbum de Karol G lanzado en 2025 que es un homenaje a la música latina?', opts: ['Mañana Será Bonito','Tropicoqueta','Bichota Season','KG0516'], ans: 1 },
+    { q: '¿Cuántos litros de agua se recomienda tomar al día para mantenerse en forma?', opts: ['1 litro','2 litros','3 litros','Medio litro'], ans: 1 },
+    { q: '¿Qué ejercicio trabaja principalmente los glúteos?', opts: ['Plancha','Burpees','Hip Thrust','Press de banca'], ans: 2 },
+    { q: '¿Qué canción de Shakira se convirtió en un hit viral en 2025 con temática animal?', opts: ['Loba','Zoo','Waka Waka','She Wolf'], ans: 1 },
+    { q: '¿Qué marca de lujo tiene el logo de dos C entrelazadas?', opts: ['Cartier','Calvin Klein','Chanel','Coach'], ans: 2 },
+    { q: '¿Cuál es el músculo más grande del cuerpo humano?', opts: ['Bíceps','Cuádriceps','Glúteo mayor','Dorsal'], ans: 2 },
+    { q: '¿Cuál es el nombre real de Feid, el cantante colombiano de "Luna"?', opts: ['Felipe Londoño','Salomón Villada','Juan Duque','Andrés Cepeda'], ans: 1 },
+    { q: '🍦 ¿Cuál es mi helado favorito?', opts: ['Chocolate','Yogurt de maracuyá','Vainilla','Fresa'], ans: 1 },
+    { q: '¿Qué tipo de entrenamiento alterna alta y baja intensidad?', opts: ['Yoga','Pilates','HIIT','CrossFit'], ans: 2 },
+    { q: '¿Qué single de Karol G superó mil millones de streams en Spotify y es un merengue?', opts: ['TQG','Provenza','Si Antes Te Hubiera Conocido','Bichota'], ans: 2 },
+    { q: '¿Qué supermodelo es conocida como "The Body"?', opts: ['Naomi Campbell','Gisele Bündchen','Elle Macpherson','Cindy Crawford'], ans: 2 }
+  ];
+
+  let tCurrent = 0, tScore = 0, tAnswered = false;
+
+  const tQ = document.getElementById('triviaQ');
+  const tOpts = document.getElementById('triviaOpts');
+  const tFeedback = document.getElementById('triviaFeedback');
+  const tNext = document.getElementById('triviaNext');
+  const tScoreEl = document.getElementById('triviaScore');
+  const tEnd = document.getElementById('triviaEnd');
+
+  function loadQuestion() {
+    tAnswered = false;
+    tFeedback.textContent = '';
+    tNext.style.display = 'none';
+    const d = triviaData[tCurrent];
+    tQ.textContent = d.q;
+    tScoreEl.textContent = `Pregunta ${tCurrent + 1} / ${triviaData.length} — Puntos: ${tScore}`;
+    tOpts.innerHTML = '';
+    d.opts.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'trivia-btn';
+      btn.textContent = opt;
+      btn.addEventListener('click', () => checkAnswer(i, btn));
+      tOpts.appendChild(btn);
+    });
+  }
+
+  function checkAnswer(idx, btn) {
+    if (tAnswered) return;
+    tAnswered = true;
+    const correct = triviaData[tCurrent].ans;
+    const btns = tOpts.querySelectorAll('.trivia-btn');
+    btns.forEach(b => b.disabled = true);
+
+    if (idx === correct) {
+      btn.classList.add('correct');
+      tScore++;
+      tFeedback.textContent = '🎉 ¡Correcto!';
+    } else {
+      btn.classList.add('wrong');
+      btns[correct].classList.add('correct');
+      tFeedback.textContent = '😅 ¡Casi! La respuesta era: ' + triviaData[tCurrent].opts[correct];
+    }
+    tScoreEl.textContent = `Pregunta ${tCurrent + 1} / ${triviaData.length} — Puntos: ${tScore}`;
+
+    if (tCurrent < triviaData.length - 1) {
+      tNext.style.display = 'block';
+    } else {
+      setTimeout(showEnd, 1200);
+    }
+  }
+
+  function showEnd() {
+    tQ.style.display = 'none';
+    tOpts.style.display = 'none';
+    tFeedback.style.display = 'none';
+    tNext.style.display = 'none';
+    tEnd.style.display = 'block';
+    document.getElementById('finalScore').textContent = `${tScore} / ${triviaData.length}`;
+
+    if (tScore === triviaData.length) {
+      document.getElementById('finalMsg').innerHTML =
+        '🏆🎁 <strong>¡FELICIDADES MI FRANCE!</strong> 🎁🏆<br><br>' +
+        '¡Ganaste la PRIMERA PARTE de tu premio! 🎉<br><br>' +
+        '📲 Envía la clave <strong style="font-size:1.4rem;color:#ff6bd6;">FRANCE2026</strong><br>' +
+        'a mi WhatsApp para reclamar tu regalo 🎀💖';
+    } else {
+      const pct = tScore / triviaData.length;
+      document.getElementById('finalMsg').textContent =
+        pct >= 0.7 ? '🥳 ¡Casi perfecta, France! Intenta de nuevo para ganar el premio' :
+        pct >= 0.4 ? '💅 ¡Nada mal! Pero necesitas las 8 correctas para el premio' :
+        '🎂 ¡Ánimo France! Inténtalo de nuevo, tú puedes 💪';
+    }
+    launchConfetti();
+  }
+
+  tNext.addEventListener('click', () => { tCurrent++; loadQuestion(); });
+
+  document.getElementById('triviaRestart').addEventListener('click', () => {
+    tCurrent = 0; tScore = 0;
+    tQ.style.display = ''; tOpts.style.display = '';
+    tFeedback.style.display = ''; tEnd.style.display = 'none';
+    loadQuestion();
+  });
+
+  loadQuestion();
+</script>
+</body>
+</html>
